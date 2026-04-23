@@ -33,7 +33,7 @@ export default function Register() {
 
     } catch (err) {
       console.error(err);
-      alert(err.response?.data?.detail || "Registration failed");
+      alert(err.response?.data?.message || "Registration failed");
     }
   };
 

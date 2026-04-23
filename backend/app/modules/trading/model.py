@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Float, ForeignKey, Integer, String, TIMESTAMP, text
+from sqlalchemy.orm import relationship
 
 from app.db.base import Base
 
@@ -11,6 +12,8 @@ class VirtualWallet(Base):
     balance = Column(Float, default=0.0)
     initial_balance = Column(Float, default=0.0)
     created_at = Column(TIMESTAMP, server_default=text("CURRENT_TIMESTAMP"))
+
+    user = relationship("User", back_populates="virtual_wallets")
 
 
 class VirtualOrder(Base):
@@ -25,6 +28,8 @@ class VirtualOrder(Base):
     status = Column(String, default="EXECUTED")
     created_at = Column(TIMESTAMP, server_default=text("CURRENT_TIMESTAMP"))
 
+    user = relationship("User", back_populates="virtual_orders")
+
 
 class VirtualPosition(Base):
     __tablename__ = "virtual_positions"
@@ -35,6 +40,8 @@ class VirtualPosition(Base):
     quantity = Column(Integer, nullable=False)
     avg_price = Column(Float, nullable=False)
     created_at = Column(TIMESTAMP, server_default=text("CURRENT_TIMESTAMP"))
+
+    user = relationship("User", back_populates="virtual_positions")
 
 
 class TradeHistory(Base):
@@ -48,3 +55,5 @@ class TradeHistory(Base):
     quantity = Column(Integer, nullable=False)
     pnl = Column(Float, default=0.0)
     created_at = Column(TIMESTAMP, server_default=text("CURRENT_TIMESTAMP"))
+
+    user = relationship("User", back_populates="trades")

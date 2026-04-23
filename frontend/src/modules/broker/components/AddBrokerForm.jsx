@@ -19,8 +19,8 @@ export default function AddBrokerForm({ onSubmit }) {
       await onSubmit(form);
       setForm(initialForm);
     } catch (err) {
-      console.error(err.response?.data || err.message);
-      alert(err.response?.data?.detail || "Failed to add broker");
+      console.error(err.response?.data?.message || err.message);
+      alert(err.response?.data?.message || "Failed to add broker");
     }
   };
 

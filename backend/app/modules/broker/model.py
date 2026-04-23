@@ -1,4 +1,5 @@
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Text
+from sqlalchemy.orm import relationship
 
 from app.db.base import Base
 
@@ -15,3 +16,5 @@ class BrokerAccount(Base):
     is_active = Column(Boolean, default=True)
     is_connected = Column(Boolean, default=False)
     is_selected = Column(Boolean, default=False)
+
+    user = relationship("User", back_populates="brokers")

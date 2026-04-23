@@ -18,7 +18,7 @@ export default function Broker() {
       const result = await verifyBroker(id);
       alert(result.connected ? "Connected" : "Failed");
     } catch (err) {
-      console.error(err.response?.data || err.message);
+      console.error(err.response?.data?.message || err.message);
     }
   };
 

@@ -18,9 +18,9 @@ export const useBrokerStore = create((set, get) => ({
 
     try {
       const res = await getBrokers();
-      set({ brokers: res.data });
+      set({ brokers: res.data.data });
     } catch (err) {
-      const error = err.response?.data?.detail || err.message;
+      const error = err.response?.data?.message || err.message;
       set({ error });
       console.error("Fetch error:", err.response?.data || err.message);
     } finally {
@@ -36,7 +36,7 @@ export const useBrokerStore = create((set, get) => ({
   verifyBroker: async (id) => {
     const res = await verifyBrokerConnection(id);
     await get().fetchBrokers();
-    return res.data;
+    return res.data.data;
   },
 
   toggleBroker: async (id) => {

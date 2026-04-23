@@ -1,36 +1,27 @@
+import os
 from datetime import datetime, timedelta
+
+from cryptography.fernet import Fernet
+from fastapi.security import OAuth2PasswordBearer
 from jose import jwt
 from passlib.context import CryptContext
-from fastapi.security import OAuth2PasswordBearer
 
-# 🔐 NEW: Encryption imports
-from cryptography.fernet import Fernet
-import os
+from app.core.config import ALGORITHM, SECRET_KEY
+from app.core.logger import get_logger
 
-# JWT config
-from app.core.config import SECRET_KEY, ALGORITHM
+
 ACCESS_TOKEN_EXPIRE_MINUTES = 60
+logger = get_logger(__name__)
 
-# Password hashing
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/auth/login")
 
-# OAuth2
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
-
-
-# =========================================================
-# 🔐 ENCRYPTION LAYER (NEW - SAFE ADDITION)
-# =========================================================
-
-# ⚠️ MUST be stored in .env (important)
 ENCRYPTION_KEY = os.getenv("ENCRYPTION_KEY")
 
 if not ENCRYPTION_KEY:
-    # fallback (only for dev, not production)
     ENCRYPTION_KEY = Fernet.generate_key()
-    print("⚠️ WARNING: ENCRYPTION_KEY not found in .env, using temporary key")
+    logger.warning("ENCRYPTION_KEY not found in .env, using temporary key")
 
-# Ensure bytes
 if isinstance(ENCRYPTION_KEY, str):
     ENCRYPTION_KEY = ENCRYPTION_KEY.encode()
 
@@ -49,10 +40,6 @@ def decrypt_data(data: str) -> str:
     return fernet.decrypt(data.encode()).decode()
 
 
-# =========================================================
-# 🔑 PASSWORD FUNCTIONS (EXISTING - UNCHANGED)
-# =========================================================
-
 def verify_password(plain, hashed):
     return pwd_context.verify(plain, hashed)
 
@@ -60,10 +47,6 @@ def verify_password(plain, hashed):
 def get_password_hash(password):
     return pwd_context.hash(password)
 
-
-# =========================================================
-# 🔐 JWT TOKEN (EXISTING - UNCHANGED)
-# =========================================================
 
 def create_access_token(data: dict):
     to_encode = data.copy()

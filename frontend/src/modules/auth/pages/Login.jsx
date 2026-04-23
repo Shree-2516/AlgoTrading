@@ -12,14 +12,14 @@ export default function Login() {
 
   const navigate = useNavigate();
   const setToken = useAuthStore((state) => state.setToken);
+  const token = useAuthStore((state) => state.token);
 
   // ✅ Auto redirect if already logged in
   useEffect(() => {
-    const token = localStorage.getItem("token");
     if (token) {
       navigate("/dashboard");
     }
-  }, [navigate]);
+  }, [navigate, token]);
 
   // ✅ Normal login
   const handleSubmit = async (e) => {
@@ -27,11 +27,11 @@ export default function Login() {
 
     try {
       const res = await login(form);
-      setToken(res.data.access_token);
+      setToken(res.data.data.access_token);
       navigate("/dashboard");
     } catch (err) {
       console.error(err);
-      alert(err.response?.data?.detail || "Login failed");
+      alert(err.response?.data?.message || "Login failed");
     }
   };
 
@@ -40,12 +40,12 @@ export default function Login() {
     try {
       const res = await loginWithGoogle(credentialResponse.credential);
 
-      setToken(res.data.access_token);
+      setToken(res.data.data.access_token);
       navigate("/dashboard");
 
     } catch (err) {
       console.error(err);
-      alert(err.response?.data?.detail || "Google login failed");
+      alert(err.response?.data?.message || "Google login failed");
     }
   };
 

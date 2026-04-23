@@ -19,7 +19,7 @@ export default function OrderForm({ onOrderPlaced }) {
       setMessage(result.message);
       onOrderPlaced?.();
     } catch (err) {
-      setMessage(err.response?.data?.detail || "Order failed");
+      setMessage(err.response?.data?.message || "Order failed");
     }
   };
 

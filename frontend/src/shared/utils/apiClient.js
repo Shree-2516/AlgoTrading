@@ -1,11 +1,11 @@
 import axios from "axios";
 
-const API = axios.create({
+const client = axios.create({
   baseURL: import.meta.env.VITE_API_URL || "http://127.0.0.1:8000",
 });
 
 // attach token automatically
-API.interceptors.request.use((req) => {
+client.interceptors.request.use((req) => {
   const token = localStorage.getItem("token");
   if (token) {
     req.headers.Authorization = `Bearer ${token}`;
@@ -13,4 +13,12 @@ API.interceptors.request.use((req) => {
   return req;
 });
 
-export default API;
+const api = {
+  get: (url, config) => client.get(url, config),
+  post: (url, data, config) => client.post(url, data, config),
+  put: (url, data, config) => client.put(url, data, config),
+  delete: (url, config) => client.delete(url, config),
+};
+
+export { client };
+export default api;

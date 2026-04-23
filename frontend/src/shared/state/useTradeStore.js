@@ -13,9 +13,9 @@ export const useTradeStore = create((set, get) => ({
 
     try {
       const res = await getPositions();
-      set({ positions: res.data });
+      set({ positions: res.data.data });
     } catch (err) {
-      const error = err.response?.data?.detail || err.message;
+      const error = err.response?.data?.message || err.message;
       set({ error });
       console.error("Error fetching positions:", error);
     } finally {

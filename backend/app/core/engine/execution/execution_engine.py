@@ -1,11 +1,15 @@
 from sqlalchemy.orm import Session
 
+from app.core.logger import get_logger
 from app.modules.trading.model import (
     TradeHistory,
     VirtualOrder,
     VirtualPosition,
     VirtualWallet,
 )
+
+
+logger = get_logger(__name__)
 
 
 def execute_for_broker(db: Session, user_id: int, order_data, broker):
@@ -59,7 +63,7 @@ def place_virtual_order(db: Session, user_id: int, data):
         db.refresh(order)
     except Exception as exc:
         db.rollback()
-        print("Order error:", str(exc))
+        logger.exception("Order execution failed: %s", exc)
         return {"error": "Order failed"}
 
     return {
