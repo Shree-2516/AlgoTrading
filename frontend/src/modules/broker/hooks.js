@@ -1,54 +1,19 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect } from "react";
 
-import {
-  addBroker,
-  getBrokers,
-  selectActiveBroker,
-  toggleBrokerStatus,
-  verifyBrokerConnection,
-} from "./api";
-
+import { useBrokerStore } from "../../shared/state/useBrokerStore";
 
 export function useBrokers() {
-  const [brokers, setBrokers] = useState([]);
-  const [loading, setLoading] = useState(false);
-
-  const fetchBrokers = useCallback(async () => {
-    setLoading(true);
-    try {
-      const res = await getBrokers();
-      setBrokers(res.data);
-    } catch (err) {
-      console.error("Fetch error:", err.response?.data || err.message);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const brokers = useBrokerStore((state) => state.brokers);
+  const loading = useBrokerStore((state) => state.loading);
+  const fetchBrokers = useBrokerStore((state) => state.fetchBrokers);
+  const createBroker = useBrokerStore((state) => state.createBroker);
+  const verifyBroker = useBrokerStore((state) => state.verifyBroker);
+  const toggleBroker = useBrokerStore((state) => state.toggleBroker);
+  const selectBroker = useBrokerStore((state) => state.selectBroker);
 
   useEffect(() => {
     fetchBrokers();
   }, [fetchBrokers]);
-
-  const createBroker = async (payload) => {
-    await addBroker(payload);
-    await fetchBrokers();
-  };
-
-  const verifyBroker = async (id) => {
-    const res = await verifyBrokerConnection(id);
-    await fetchBrokers();
-    return res.data;
-  };
-
-  const toggleBroker = async (id) => {
-    await toggleBrokerStatus(id);
-    await fetchBrokers();
-  };
-
-  const selectBroker = async (id) => {
-    await selectActiveBroker(id);
-    await fetchBrokers();
-  };
 
   return {
     brokers,

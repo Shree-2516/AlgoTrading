@@ -1,23 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import OrderForm from "../components/OrderForm";
 import Positions from "../components/Positions";
-import { getPositions as fetchPositions } from "../api";
+import { useTradeStore } from "../../../shared/state/useTradeStore";
 
 export default function Trading() {
-  const [positions, setPositions] = useState([]);
-
-  const getPositions = async () => {
-    try {
-      const res = await fetchPositions();
-      setPositions(res.data);
-    } catch {
-      console.log("Error fetching positions");
-    }
-  };
+  const positions = useTradeStore((state) => state.positions);
+  const getPositions = useTradeStore((state) => state.fetchPositions);
 
   useEffect(() => {
     getPositions();
-  }, []);
+  }, [getPositions]);
 
   return (
     <div style={{ padding: "20px" }}>

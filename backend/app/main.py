@@ -37,10 +37,12 @@ def sqlalchemy_exception_handler(request, exc):
     )
 
 
-app.include_router(auth_router, prefix="/auth", tags=["Auth"])
-app.include_router(user_router, prefix="/user", tags=["User"])
-app.include_router(broker_router, prefix="/broker", tags=["Broker"])
-app.include_router(trading_router, prefix="/virtual", tags=["Virtual Trading"])
+API_V1_PREFIX = "/api/v1"
+
+app.include_router(auth_router, prefix=f"{API_V1_PREFIX}/auth", tags=["Auth"])
+app.include_router(user_router, prefix=f"{API_V1_PREFIX}/user", tags=["User"])
+app.include_router(broker_router, prefix=f"{API_V1_PREFIX}/broker", tags=["Broker"])
+app.include_router(trading_router, prefix=f"{API_V1_PREFIX}/virtual", tags=["Virtual Trading"])
 
 
 @app.get("/")

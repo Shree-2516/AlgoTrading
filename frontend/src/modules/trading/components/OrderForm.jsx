@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { placeOrder as placeOrderApi } from "../api";
+import { useTradeStore } from "../../../shared/state/useTradeStore";
 
 export default function OrderForm({ onOrderPlaced }) {
+  const submitOrder = useTradeStore((state) => state.submitOrder);
   const [order, setOrder] = useState({
     symbol: "BTCUSDT",
     side: "BUY",
@@ -13,10 +14,10 @@ export default function OrderForm({ onOrderPlaced }) {
 
   const handlePlaceOrder = async () => {
     try {
-      const res = await placeOrderApi(order);
+      const result = await submitOrder(order);
 
-      setMessage(res.data.message);
-      onOrderPlaced();
+      setMessage(result.message);
+      onOrderPlaced?.();
     } catch (err) {
       setMessage(err.response?.data?.detail || "Order failed");
     }

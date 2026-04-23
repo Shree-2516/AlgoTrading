@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { GoogleLogin } from "@react-oauth/google";
 import { login, loginWithGoogle } from "../api";
+import { useAuthStore } from "../../../shared/state/useAuthStore";
 
 export default function Login() {
   const [form, setForm] = useState({
@@ -10,6 +11,7 @@ export default function Login() {
   });
 
   const navigate = useNavigate();
+  const setToken = useAuthStore((state) => state.setToken);
 
   // ✅ Auto redirect if already logged in
   useEffect(() => {
@@ -25,7 +27,7 @@ export default function Login() {
 
     try {
       const res = await login(form);
-      localStorage.setItem("token", res.data.access_token);
+      setToken(res.data.access_token);
       navigate("/dashboard");
     } catch (err) {
       console.error(err);
@@ -38,7 +40,7 @@ export default function Login() {
     try {
       const res = await loginWithGoogle(credentialResponse.credential);
 
-      localStorage.setItem("token", res.data.access_token);
+      setToken(res.data.access_token);
       navigate("/dashboard");
 
     } catch (err) {
