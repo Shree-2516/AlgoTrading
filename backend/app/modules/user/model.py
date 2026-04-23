@@ -1,0 +1,15 @@
+from sqlalchemy import Boolean, Column, Integer, String, TIMESTAMP, text
+
+from app.db.base import Base
+
+
+class User(Base):
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, nullable=False)
+    email = Column(String, unique=True, index=True, nullable=False)
+    password = Column(String, nullable=True)
+
+    is_google_user = Column(Boolean, default=False)
+    created_at = Column(TIMESTAMP, server_default=text("CURRENT_TIMESTAMP"))
